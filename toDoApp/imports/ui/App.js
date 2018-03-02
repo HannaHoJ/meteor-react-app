@@ -34,7 +34,7 @@ class App extends Component {
  		this.setState({
 		    text: ''
 		});
-
+ 		
 		//not on client side!!!
  		// Tasks.insert({
  		// 	text: text, //= text: text
@@ -46,6 +46,7 @@ class App extends Component {
  		//simulation of the method is run in client predicting the outcome
  		//if server response comes back and the outcome is identical it stay if not ui becomes updated
  		Meteor.call('tasks.insert', text);
+ 		React.getElementById('task-form').val().clear();
  	}
 
 	render() {
@@ -63,7 +64,7 @@ class App extends Component {
 						/>
 						See only undone Tasks.
 					</label>
-					<form onSubmit={(e) => { this.submitForm(e)} }>
+					<form id='task-form' onSubmit={(e) => { this.submitForm(e)} }>
 						<input 
 							type="text" 
 							ref="clear" //usage with React.findDOMNode(this.refs.<ref_value>) 
@@ -83,9 +84,10 @@ class App extends Component {
 //bit like apollo?
 //DB query to list all the tasks
 export default withTracker(() => {
-  return {
-  	//defines props connected to database queries
-    tasks: Tasks.find({}, { sort: {createdAt: -1} }).fetch(),
-    countUndone: Tasks.find({ checked: { $ne: true } }).count(),
-  };
+	Meteor.subscribe('tasks');
+	return {
+		//defines props connected to database queries
+		tasks: Tasks.find({}, { sort: {createdAt: -1} }).fetch(),
+		countUndone: Tasks.find({ checked: { $ne: true } }).count(),
+	};
 })(App);

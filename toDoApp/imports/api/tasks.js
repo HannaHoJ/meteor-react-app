@@ -5,6 +5,10 @@ import { check } from 'meteor/check';
 //creating tasks collection 
 export const Tasks = new Mongo.Collection('tasks');
 
+if(Meteor.isServer){
+	Meteor.publish('tasks', () => { Tasks.find() })
+}
+
 Meteor.methods({
 	'tasks.insert'(text) {
 		//typechecking
@@ -25,7 +29,7 @@ Meteor.methods({
 	},
 
 	'tasks.remove'(taskId) {
-		check(taskId, String);
+
 		//Delete document from collection
 		Tasks.remove(taskId);
 	},
