@@ -11,11 +11,17 @@ class App extends Component {
 		this.submitForm = this.submitForm.bind(this);
 		this.state = {
 			text: "",
+			hideCompleted: false
 		}
 	}
  
 	renderTasks() {
-		return this.props.tasks.map((task) => (
+		let undoneTasks = this.props.tasks;
+		if(this.state.hideCompleted){
+			//filter all tasks for tasks with have checked false
+			undoneTasks = undoneTasks.filter(task => !task.checked);
+		}
+		return undoneTasks.map((task) => (
 			<Task key={task._id} taskId={task._id} task={task} />
 		));
 	}
@@ -39,7 +45,16 @@ class App extends Component {
 			<div className="container">
 				<header>
 				  <h1>Todo List</h1>
+				  <h3>You have still { this.props.countUndone } Task to do</h3>
 				</header>
+					<label className="hide-completed">
+						<input 
+						type="checkbox"
+						checked={this.state.hideCompleted}
+						onClick={ (e) => this.setState({ hideCompleted: !this.state.hideCompleted }) }
+						/>
+						See only undone Tasks.
+					</label>
 					<form onSubmit={(e) => { this.submitForm(e)} }>
 						<input 
 							type="text" 
@@ -61,7 +76,8 @@ class App extends Component {
 //DB query to list all the tasks
 export default withTracker(() => {
   return {
-  	//defines a prop tasks with can be used to map throughs
+  	//defines props connected to database queries
     tasks: Tasks.find({}, { sort: {createdAt: -1} }).fetch(),
+    countUndone: Tasks.find({ checked: { $ne: true } }).count(),
   };
 })(App);
