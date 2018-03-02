@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
 
 import { Tasks } from '../api/tasks.js'; 
 import Task from './Task.js';
@@ -22,7 +23,7 @@ class App extends Component {
 			undoneTasks = undoneTasks.filter(task => !task.checked);
 		}
 		return undoneTasks.map((task) => (
-			<Task key={task._id} taskId={task._id} task={task} />
+			<Task key={task._id}  task={task} />
 		));
 	}
  
@@ -33,11 +34,18 @@ class App extends Component {
  		this.setState({
 		    text: ''
 		});
- 		Tasks.insert({
- 			text: text, //= text: text
- 			createdAt: new Date()
- 		})
- 		
+
+		//not on client side!!!
+ 		// Tasks.insert({
+ 		// 	text: text, //= text: text
+ 		// 	createdAt: new Date()
+ 		// })
+
+ 		//Meteor.call is optimistic
+ 		//sends request to server to run method(ajax)
+ 		//simulation of the method is run in client predicting the outcome
+ 		//if server response comes back and the outcome is identical it stay if not ui becomes updated
+ 		Meteor.call('tasks.insert', text);
  	}
 
 	render() {
