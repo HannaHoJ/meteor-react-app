@@ -1,13 +1,6 @@
-import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
-//creating tasks collection 
-export const Tasks = new Mongo.Collection('tasks');
-
-if(Meteor.isServer){
-	Meteor.publish('tasks', () => { Tasks.find() })
-}
 
 Meteor.methods({
 	'tasks.insert'(text) {
@@ -18,7 +11,7 @@ Meteor.methods({
 		// if (! this.userId) {
 		//   throw new Meteor.Error('not-authorized');
 		// }
-
+		console.log("before insert");
 		//Create document and insert it in collection
 		Tasks.insert({
 		  	text,
@@ -26,7 +19,10 @@ Meteor.methods({
 		  	//owner: this.userId,
 		  	//username: Meteor.users.findOne(this.userId).username,
 		});
+		console.log('after insert')
+
 	},
+
 
 	'tasks.remove'(taskId) {
 

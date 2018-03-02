@@ -1,6 +1,6 @@
 import React, { Component } from 'react'; //import react specific Modules
 import { Meteor } from 'meteor/meteor';
-import { Tasks } from '../api/tasks.js';
+
 
 class Task extends Component{
 	constructor(props){
@@ -25,9 +25,9 @@ class Task extends Component{
 		return( 
 		<li className={ this.props.task.checked? 'checked': '' }> 
 			<input 
-			type="checkbox"
-			checked={!!this.props.task.checked}
-			onClick={ this.checkedTask }
+				type="checkbox"
+				checked={!!this.props.task.checked}
+				onChange={ this.checkedTask }
 			/>
 			<span>{this.props.task.text } </span>
 			<button onClick={ this.deleteTask } className="delete">X</button>

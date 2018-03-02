@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-
-import { Tasks } from '../api/tasks.js'; 
+ 
+import TasksApi from '../api/tasks.js';
 import Task from './Task.js';
+
  
 // App component - represents the whole app
 class App extends Component {
@@ -46,7 +47,7 @@ class App extends Component {
  		//simulation of the method is run in client predicting the outcome
  		//if server response comes back and the outcome is identical it stay if not ui becomes updated
  		Meteor.call('tasks.insert', text);
- 		React.getElementById('task-form').val().clear();
+
  	}
 
 	render() {
@@ -87,7 +88,7 @@ export default withTracker(() => {
 	Meteor.subscribe('tasks');
 	return {
 		//defines props connected to database queries
-		tasks: Tasks.find({}, { sort: {createdAt: -1} }).fetch(),
+		tasks: Tasks.api.getAll(),
 		countUndone: Tasks.find({ checked: { $ne: true } }).count(),
 	};
 })(App);

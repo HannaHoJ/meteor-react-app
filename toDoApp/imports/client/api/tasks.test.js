@@ -8,7 +8,8 @@ import { Tasks } from './tasks.js';
 if (Meteor.isServer) {
 	describe('Tasks', () => {
 		describe('methods', () => {
-			// const userId = Random.id();
+
+			//const userId = Random.id();
 			// let taskId;
 			//sets environment for the test
 			beforeEach(() => {
